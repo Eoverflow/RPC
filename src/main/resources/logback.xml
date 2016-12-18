@@ -1,0 +1,84 @@
+<configuration>
+
+    <property name="logRoot" value="${logRoot}"/>
+    <property name="pattern" value="%d %p [%t] %c{2} %X{traceId:--} %m%n"/>
+
+    <property name="LEVEL" value="${logLevel}"/>
+    <property name="consoleLayoutPattern"
+              value="%-20(%d{yyyyMMdd_HH:mm:ss.SSS} [%logger][%thread]) [%level] %msg%n" />
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${consoleLayoutPattern}</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${logRoot}/study/rpc.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${logRoot}/study/rpc.log.%d{yyyy-MM-dd}</fileNamePattern>
+            <maxHistory>7</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${pattern}</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="AUDIT" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${logRoot}/web/auditTrail.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${logRoot}/web/auditTrail.log.%d{yyyy-MM-dd_HH}</fileNamePattern>
+            <maxHistory>240</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%m%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="jmonitor" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${logRoot}/monitor/jmonitor.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${logRoot}/monitor/jmonitor.log.%d{yyyy-MM-dd}</fileNamePattern>
+            <maxHistory>7</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <logger name="jmonitor" level="INFO" additivity="false">
+        <appender-ref ref="jmonitor"/>
+    </logger>
+
+
+
+   <logger name="com.liws.rpc.test.testnetty.RpcServer" level="${LEVEL}" additivity="true">
+       <appender-ref ref="FILE"/>
+   </logger>
+
+    <logger name="com.liws.rpc.test.testnetty.RpcClient" level="${LEVEL}" additivity="true">
+        <appender-ref ref="FILE"/>
+    </logger>
+
+    <logger name="com.liws.rpc.test.testnetty.SendWorker" level="${LEVEL}" additivity="true">
+        <appender-ref ref="FILE"/>
+    </logger>
+
+    <logger name="com.liws.rpc.test.testnetty.MessageEncodeSendHandler" level="${LEVEL}" additivity="true">
+        <appender-ref ref="FILE"/>
+    </logger>
+
+    <logger name="com.liws.rpc.test.testnetty.MessageRecieveDecodeHandler" level="${LEVEL}" additivity="true">
+        <appender-ref ref="FILE"/>
+    </logger>
+
+    <logger name="com.liws.rpc.test.testnetty.MessagePrinterHandler" level="${LEVEL}" additivity="true">
+        <appender-ref ref="FILE"/>
+    </logger>
+
+    <root level="${logLevel}">
+        <appender-ref ref="STDOUT"/>
+    </root>
+
+
+</configuration>
